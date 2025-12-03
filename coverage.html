@@ -1,0 +1,1470 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>structures: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">datastructures/structures/AVLtree.go (91.4%)</option>
+				
+				<option value="file1">datastructures/structures/array.go (96.6%)</option>
+				
+				<option value="file2">datastructures/structures/flist.go (89.4%)</option>
+				
+				<option value="file3">datastructures/structures/hash.go (91.9%)</option>
+				
+				<option value="file4">datastructures/structures/llist.go (91.9%)</option>
+				
+				<option value="file5">datastructures/structures/queue.go (100.0%)</option>
+				
+				<option value="file6">datastructures/structures/stack.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package structures
+
+import (
+    "fmt"
+    "strconv"
+)
+
+type TreeNode struct {
+    Value  int
+    Left   *TreeNode
+    Right  *TreeNode
+    Height int
+}
+
+type AVLTree struct {
+    root *TreeNode
+}
+
+func NewAVLTree() *AVLTree <span class="cov2" title="5">{
+    return &amp;AVLTree{root: nil}
+}</span>
+
+func (t *AVLTree) Insert(value int) <span class="cov6" title="127">{
+    t.root = t.insertNode(t.root, value)
+}</span>
+
+func (t *AVLTree) Search(value int) bool <span class="cov3" title="7">{
+    return t.searchNode(t.root, value)
+}</span>
+
+func (t *AVLTree) Remove(value int) <span class="cov2" title="3">{
+    t.root = t.deleteNode(t.root, value)
+}</span>
+
+func (t *AVLTree) Empty() bool <span class="cov2" title="3">{
+    return t.root == nil
+}</span>
+
+func (t *AVLTree) Size() int <span class="cov3" title="9">{
+    return t.countNodes(t.root)
+}</span>
+
+func (t *AVLTree) Height() int <span class="cov1" title="2">{
+    return t.getHeight(t.root)
+}</span>
+
+func (t *AVLTree) Min() (int, error) <span class="cov1" title="2">{
+    if t.root == nil </span><span class="cov1" title="1">{
+        return 0, fmt.Errorf("tree is empty")
+    }</span>
+    <span class="cov1" title="1">return t.findMin(t.root), nil</span>
+}
+
+func (t *AVLTree) Max() (int, error) <span class="cov1" title="2">{
+    if t.root == nil </span><span class="cov1" title="1">{
+        return 0, fmt.Errorf("tree is empty")
+    }</span>
+    <span class="cov1" title="1">return t.findMax(t.root), nil</span>
+}
+
+func (t *AVLTree) InOrder() []int <span class="cov1" title="1">{
+    result := make([]int, 0)
+    t.inOrderCollect(t.root, &amp;result)
+    return result
+}</span>
+
+func (t *AVLTree) PreOrder() []int <span class="cov1" title="1">{
+    result := make([]int, 0)
+    t.preOrderCollect(t.root, &amp;result)
+    return result
+}</span>
+
+func (t *AVLTree) PostOrder() []int <span class="cov1" title="1">{
+    result := make([]int, 0)
+    t.postOrderCollect(t.root, &amp;result)
+    return result
+}</span>
+
+func (t *AVLTree) PrintInOrder() <span class="cov1" title="1">{
+    fmt.Print("Дерево (inorder): ")
+    t.inOrderTraversal(t.root)
+    fmt.Println()
+}</span>
+
+func (t *AVLTree) PrintPreOrder() <span class="cov1" title="1">{
+    fmt.Print("Дерево (preorder): ")
+    t.preOrderTraversal(t.root)
+    fmt.Println()
+}</span>
+
+func (t *AVLTree) PrintPostOrder() <span class="cov1" title="1">{
+    fmt.Print("Дерево (postorder): ")
+    t.postOrderTraversal(t.root)
+    fmt.Println()
+}</span>
+
+func (t *AVLTree) Clear() <span class="cov2" title="5">{
+    t.root = nil
+}</span>
+
+func (t *AVLTree) Serialize() []string <span class="cov1" title="1">{
+    result := make([]string, 0)
+    t.inOrderSerialize(t.root, &amp;result)
+    return result
+}</span>
+
+func (t *AVLTree) Deserialize(data []string) <span class="cov1" title="1">{
+    t.Clear()
+    for _, item := range data </span><span class="cov2" title="4">{
+        if value, err := strconv.Atoi(item); err == nil </span><span class="cov2" title="4">{
+            t.Insert(value)
+        }</span>
+    }
+}
+
+func (t *AVLTree) getHeight(node *TreeNode) int <span class="cov10" title="2818">{
+    if node == nil </span><span class="cov7" title="441">{
+        return 0
+    }</span>
+    <span class="cov9" title="2377">return node.Height</span>
+}
+
+func (t *AVLTree) getBalance(node *TreeNode) int <span class="cov8" title="608">{
+    if node == nil </span><span class="cov0" title="0">{
+        return 0
+    }</span>
+    <span class="cov8" title="608">return t.getHeight(node.Left) - t.getHeight(node.Right)</span>
+}
+
+func (t *AVLTree) rightRotate(y *TreeNode) *TreeNode <span class="cov1" title="1">{
+    x := y.Left
+    T2 := x.Right
+
+    x.Right = y
+    y.Left = T2
+
+    y.Height = max(t.getHeight(y.Left), t.getHeight(y.Right)) + 1
+    x.Height = max(t.getHeight(x.Left), t.getHeight(x.Right)) + 1
+
+    return x
+}</span>
+
+func (t *AVLTree) leftRotate(x *TreeNode) *TreeNode <span class="cov6" title="95">{
+    y := x.Right
+    T2 := y.Left
+
+    y.Left = x
+    x.Right = T2
+
+    x.Height = max(t.getHeight(x.Left), t.getHeight(x.Right)) + 1
+    y.Height = max(t.getHeight(y.Left), t.getHeight(y.Right)) + 1
+
+    return y
+}</span>
+
+func (t *AVLTree) insertNode(node *TreeNode, value int) *TreeNode <span class="cov8" title="729">{
+    if node == nil </span><span class="cov6" title="126">{
+        return &amp;TreeNode{Value: value, Height: 1}
+    }</span>
+
+    <span class="cov8" title="603">if value &lt; node.Value </span><span class="cov3" title="13">{
+        node.Left = t.insertNode(node.Left, value)
+    }</span> else<span class="cov8" title="590"> if value &gt; node.Value </span><span class="cov8" title="589">{
+        node.Right = t.insertNode(node.Right, value)
+    }</span> else<span class="cov1" title="1"> {
+        return node
+    }</span>
+
+    <span class="cov8" title="602">node.Height = 1 + max(t.getHeight(node.Left), t.getHeight(node.Right))
+    balance := t.getBalance(node)
+
+    if balance &gt; 1 &amp;&amp; value &lt; node.Left.Value </span><span class="cov1" title="1">{
+        return t.rightRotate(node)
+    }</span>
+
+    <span class="cov8" title="601">if balance &lt; -1 &amp;&amp; value &gt; node.Right.Value </span><span class="cov6" title="95">{
+        return t.leftRotate(node)
+    }</span>
+
+    <span class="cov8" title="506">if balance &gt; 1 &amp;&amp; value &gt; node.Left.Value </span><span class="cov0" title="0">{
+        node.Left = t.leftRotate(node.Left)
+        return t.rightRotate(node)
+    }</span>
+
+    <span class="cov8" title="506">if balance &lt; -1 &amp;&amp; value &lt; node.Right.Value </span><span class="cov0" title="0">{
+        node.Right = t.rightRotate(node.Right)
+        return t.leftRotate(node)
+    }</span>
+
+    <span class="cov8" title="506">return node</span>
+}
+
+func (t *AVLTree) deleteNode(node *TreeNode, value int) *TreeNode <span class="cov3" title="9">{
+    if node == nil </span><span class="cov0" title="0">{
+        return node
+    }</span>
+
+    <span class="cov3" title="9">if value &lt; node.Value </span><span class="cov2" title="3">{
+        node.Left = t.deleteNode(node.Left, value)
+    }</span> else<span class="cov3" title="6"> if value &gt; node.Value </span><span class="cov1" title="2">{
+        node.Right = t.deleteNode(node.Right, value)
+    }</span> else<span class="cov2" title="4"> {
+        if node.Left == nil || node.Right == nil </span><span class="cov2" title="3">{
+            var temp *TreeNode
+            if node.Left != nil </span><span class="cov0" title="0">{
+                temp = node.Left
+            }</span> else<span class="cov2" title="3"> {
+                temp = node.Right
+            }</span>
+
+            <span class="cov2" title="3">if temp == nil </span><span class="cov2" title="3">{
+                temp = node
+                node = nil
+            }</span> else<span class="cov0" title="0"> {
+                *node = *temp
+            }</span>
+        } else<span class="cov1" title="1"> {
+            temp := t.minValueNode(node.Right)
+            node.Value = temp.Value
+            node.Right = t.deleteNode(node.Right, temp.Value)
+        }</span>
+    }
+
+    <span class="cov3" title="9">if node == nil </span><span class="cov2" title="3">{
+        return node
+    }</span>
+
+    <span class="cov3" title="6">node.Height = 1 + max(t.getHeight(node.Left), t.getHeight(node.Right))
+    balance := t.getBalance(node)
+
+    if balance &gt; 1 &amp;&amp; t.getBalance(node.Left) &gt;= 0 </span><span class="cov0" title="0">{
+        return t.rightRotate(node)
+    }</span>
+
+    <span class="cov3" title="6">if balance &gt; 1 &amp;&amp; t.getBalance(node.Left) &lt; 0 </span><span class="cov0" title="0">{
+        node.Left = t.leftRotate(node.Left)
+        return t.rightRotate(node)
+    }</span>
+
+    <span class="cov3" title="6">if balance &lt; -1 &amp;&amp; t.getBalance(node.Right) &lt;= 0 </span><span class="cov0" title="0">{
+        return t.leftRotate(node)
+    }</span>
+
+    <span class="cov3" title="6">if balance &lt; -1 &amp;&amp; t.getBalance(node.Right) &gt; 0 </span><span class="cov0" title="0">{
+        node.Right = t.rightRotate(node.Right)
+        return t.leftRotate(node)
+    }</span>
+
+    <span class="cov3" title="6">return node</span>
+}
+
+func (t *AVLTree) minValueNode(node *TreeNode) *TreeNode <span class="cov1" title="1">{
+    current := node
+    for current.Left != nil </span><span class="cov1" title="1">{
+        current = current.Left
+    }</span>
+    <span class="cov1" title="1">return current</span>
+}
+
+func (t *AVLTree) searchNode(node *TreeNode, value int) bool <span class="cov4" title="21">{
+    if node == nil </span><span class="cov2" title="4">{
+        return false
+    }</span>
+    <span class="cov4" title="17">if value == node.Value </span><span class="cov2" title="3">{
+        return true
+    }</span>
+    <span class="cov3" title="14">if value &lt; node.Value </span><span class="cov2" title="5">{
+        return t.searchNode(node.Left, value)
+    }</span>
+    <span class="cov3" title="9">return t.searchNode(node.Right, value)</span>
+}
+
+func (t *AVLTree) inOrderTraversal(node *TreeNode) <span class="cov3" title="7">{
+    if node != nil </span><span class="cov2" title="3">{
+        t.inOrderTraversal(node.Left)
+        fmt.Printf("%d ", node.Value)
+        t.inOrderTraversal(node.Right)
+    }</span>
+}
+
+func (t *AVLTree) preOrderTraversal(node *TreeNode) <span class="cov3" title="7">{
+    if node != nil </span><span class="cov2" title="3">{
+        fmt.Printf("%d ", node.Value)
+        t.preOrderTraversal(node.Left)
+        t.preOrderTraversal(node.Right)
+    }</span>
+}
+
+func (t *AVLTree) postOrderTraversal(node *TreeNode) <span class="cov3" title="7">{
+    if node != nil </span><span class="cov2" title="3">{
+        t.postOrderTraversal(node.Left)
+        t.postOrderTraversal(node.Right)
+        fmt.Printf("%d ", node.Value)
+    }</span>
+}
+
+func (t *AVLTree) countNodes(node *TreeNode) int <span class="cov7" title="261">{
+    if node == nil </span><span class="cov6" title="135">{
+        return 0
+    }</span>
+    <span class="cov6" title="126">return 1 + t.countNodes(node.Left) + t.countNodes(node.Right)</span>
+}
+
+func (t *AVLTree) findMin(node *TreeNode) int <span class="cov1" title="1">{
+    for node.Left != nil </span><span class="cov1" title="2">{
+        node = node.Left
+    }</span>
+    <span class="cov1" title="1">return node.Value</span>
+}
+
+func (t *AVLTree) findMax(node *TreeNode) int <span class="cov1" title="1">{
+    for node.Right != nil </span><span class="cov1" title="2">{
+        node = node.Right
+    }</span>
+    <span class="cov1" title="1">return node.Value</span>
+}
+
+func (t *AVLTree) inOrderCollect(node *TreeNode, result *[]int) <span class="cov3" title="11">{
+    if node != nil </span><span class="cov2" title="5">{
+        t.inOrderCollect(node.Left, result)
+        *result = append(*result, node.Value)
+        t.inOrderCollect(node.Right, result)
+    }</span>
+}
+
+func (t *AVLTree) preOrderCollect(node *TreeNode, result *[]int) <span class="cov3" title="11">{
+    if node != nil </span><span class="cov2" title="5">{
+        *result = append(*result, node.Value)
+        t.preOrderCollect(node.Left, result)
+        t.preOrderCollect(node.Right, result)
+    }</span>
+}
+
+func (t *AVLTree) postOrderCollect(node *TreeNode, result *[]int) <span class="cov3" title="11">{
+    if node != nil </span><span class="cov2" title="5">{
+        t.postOrderCollect(node.Left, result)
+        t.postOrderCollect(node.Right, result)
+        *result = append(*result, node.Value)
+    }</span>
+}
+
+func (t *AVLTree) inOrderSerialize(node *TreeNode, result *[]string) <span class="cov3" title="9">{
+    if node != nil </span><span class="cov2" title="4">{
+        t.inOrderSerialize(node.Left, result)
+        *result = append(*result, strconv.Itoa(node.Value))
+        t.inOrderSerialize(node.Right, result)
+    }</span>
+}
+
+func max(a, b int) int <span class="cov8" title="800">{
+    if a &gt; b </span><span class="cov3" title="14">{
+        return a
+    }</span>
+    <span class="cov8" title="786">return b</span>
+}</pre>
+		
+		<pre class="file" id="file1" style="display: none">package structures
+
+import "fmt"
+
+type DynamicArray struct {
+    data []string
+    size int
+}
+
+func NewDynamicArray(initialCapacity int) *DynamicArray <span class="cov6" title="6">{
+    if initialCapacity &lt;= 0 </span><span class="cov3" title="2">{
+        initialCapacity = 10
+    }</span>
+    <span class="cov6" title="6">return &amp;DynamicArray{
+        data: make([]string, initialCapacity),
+        size: 0,
+    }</span>
+}
+
+func (da *DynamicArray) PushBack(value string) <span class="cov10" title="16">{
+    if da.size &gt;= len(da.data) </span><span class="cov4" title="3">{
+        da.ensureCapacity(da.size + 1)
+    }</span>
+    <span class="cov10" title="16">da.data[da.size] = value
+    da.size++</span>
+}
+
+func (da *DynamicArray) Insert(index int, value string) error <span class="cov3" title="2">{
+    if index &lt; 0 || index &gt; da.size </span><span class="cov1" title="1">{
+        return fmt.Errorf("index out of range")
+    }</span>
+    
+    <span class="cov1" title="1">if da.size &gt;= len(da.data) </span><span class="cov0" title="0">{
+        da.ensureCapacity(da.size + 1)
+    }</span>
+    
+    <span class="cov1" title="1">copy(da.data[index+1:], da.data[index:da.size])
+    da.data[index] = value
+    da.size++
+    return nil</span>
+}
+
+func (da *DynamicArray) Remove(index int) (string, error) <span class="cov3" title="2">{
+    if index &lt; 0 || index &gt;= da.size </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("index out of range")
+    }</span>
+    
+    <span class="cov1" title="1">value := da.data[index]
+    copy(da.data[index:], da.data[index+1:da.size])
+    da.size--
+    da.data[da.size] = ""
+    return value, nil</span>
+}
+
+func (da *DynamicArray) Set(index int, value string) error <span class="cov3" title="2">{
+    if index &lt; 0 || index &gt;= da.size </span><span class="cov1" title="1">{
+        return fmt.Errorf("index out of range")
+    }</span>
+    <span class="cov1" title="1">da.data[index] = value
+    return nil</span>
+}
+
+func (da *DynamicArray) Get(index int) (string, error) <span class="cov6" title="6">{
+    if index &lt; 0 || index &gt;= da.size </span><span class="cov3" title="2">{
+        return "", fmt.Errorf("index out of range")
+    }</span>
+    <span class="cov5" title="4">return da.data[index], nil</span>
+}
+
+func (da *DynamicArray) Find(value string) int <span class="cov3" title="2">{
+    for i := 0; i &lt; da.size; i++ </span><span class="cov4" title="3">{
+        if da.data[i] == value </span><span class="cov1" title="1">{
+            return i
+        }</span>
+    }
+    <span class="cov1" title="1">return -1</span>
+}
+
+func (da *DynamicArray) Size() int <span class="cov7" title="7">{
+    return da.size
+}</span>
+
+func (da *DynamicArray) Capacity() int <span class="cov6" title="5">{
+    return len(da.data)
+}</span>
+
+func (da *DynamicArray) Clear() <span class="cov3" title="2">{
+    for i := 0; i &lt; da.size; i++ </span><span class="cov3" title="2">{
+        da.data[i] = ""
+    }</span>
+    <span class="cov3" title="2">da.size = 0</span>
+}
+
+func (da *DynamicArray) Print() <span class="cov1" title="1">{
+    fmt.Printf("Массив [%d/%d]: ", da.size, len(da.data))
+    for i := 0; i &lt; da.size; i++ </span><span class="cov3" title="2">{
+        fmt.Printf("\"%s\"", da.data[i])
+        if i &lt; da.size-1 </span><span class="cov1" title="1">{
+            fmt.Print(", ")
+        }</span>
+    }
+    <span class="cov1" title="1">fmt.Println()</span>
+}
+
+func (da *DynamicArray) Serialize() []string <span class="cov1" title="1">{
+    result := make([]string, da.size)
+    copy(result, da.data[:da.size])
+    return result
+}</span>
+
+func (da *DynamicArray) Deserialize(data []string) <span class="cov1" title="1">{
+    da.Clear()
+    da.ensureCapacity(len(data))
+    for _, item := range data </span><span class="cov3" title="2">{
+        da.PushBack(item)
+    }</span>
+}
+
+func (da *DynamicArray) ensureCapacity(requiredSize int) <span class="cov5" title="4">{
+    if requiredSize &gt; len(da.data) </span><span class="cov4" title="3">{
+        newCapacity := len(da.data) * 2
+        if newCapacity &lt; requiredSize </span><span class="cov0" title="0">{
+            newCapacity = requiredSize + 10
+        }</span>
+        <span class="cov4" title="3">newData := make([]string, newCapacity)
+        copy(newData, da.data)
+        da.data = newData</span>
+    }
+}</pre>
+		
+		<pre class="file" id="file2" style="display: none">package structures
+
+import "fmt"
+
+type SNode struct {
+    Value string
+    Next  *SNode
+}
+
+type SinglyLinkedList struct {
+    head *SNode
+    size int
+}
+
+func NewSinglyLinkedList() *SinglyLinkedList <span class="cov3" title="2">{
+    return &amp;SinglyLinkedList{head: nil, size: 0}
+}</span>
+
+func (sll *SinglyLinkedList) PushFront(value string) <span class="cov3" title="2">{
+    newNode := &amp;SNode{Value: value, Next: sll.head}
+    sll.head = newNode
+    sll.size++
+}</span>
+
+func (sll *SinglyLinkedList) PushBack(value string) <span class="cov8" title="9">{
+    newNode := &amp;SNode{Value: value}
+    if sll.head == nil </span><span class="cov6" title="4">{
+        sll.head = newNode
+    }</span> else<span class="cov6" title="5"> {
+        current := sll.head
+        for current.Next != nil </span><span class="cov1" title="1">{
+            current = current.Next
+        }</span>
+        <span class="cov6" title="5">current.Next = newNode</span>
+    }
+    <span class="cov8" title="9">sll.size++</span>
+}
+
+func (sll *SinglyLinkedList) Find(value string) *SNode <span class="cov7" title="6">{
+    current := sll.head
+    for current != nil </span><span class="cov8" title="8">{
+        if current.Value == value </span><span class="cov4" title="3">{
+            return current
+        }</span>
+        <span class="cov6" title="5">current = current.Next</span>
+    }
+    <span class="cov4" title="3">return nil</span>
+}
+
+func (sll *SinglyLinkedList) AddAfter(node *SNode, value string) error <span class="cov3" title="2">{
+    if node == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("node cannot be nil")
+    }</span>
+    <span class="cov1" title="1">newNode := &amp;SNode{Value: value, Next: node.Next}
+    node.Next = newNode
+    sll.size++
+    return nil</span>
+}
+
+func (sll *SinglyLinkedList) DeleteAfter(node *SNode) error <span class="cov3" title="2">{
+    if node == nil || node.Next == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("no node to delete after")
+    }</span>
+    <span class="cov1" title="1">node.Next = node.Next.Next
+    sll.size--
+    return nil</span>
+}
+
+func (sll *SinglyLinkedList) AddBefore(node *SNode, value string) error <span class="cov3" title="2">{
+    if node == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("node cannot be nil")
+    }</span>
+    
+    <span class="cov1" title="1">if sll.head == node </span><span class="cov0" title="0">{
+        sll.PushFront(value)
+        return nil
+    }</span>
+    
+    <span class="cov1" title="1">current := sll.head
+    for current != nil &amp;&amp; current.Next != node </span><span class="cov0" title="0">{
+        current = current.Next
+    }</span>
+    
+    <span class="cov1" title="1">if current == nil </span><span class="cov0" title="0">{
+        return fmt.Errorf("node not found in list")
+    }</span>
+    
+    <span class="cov1" title="1">newNode := &amp;SNode{Value: value, Next: node}
+    current.Next = newNode
+    sll.size++
+    return nil</span>
+}
+
+func (sll *SinglyLinkedList) DeleteBefore(node *SNode) error <span class="cov3" title="2">{
+    if node == nil || sll.head == nil || sll.head == node </span><span class="cov1" title="1">{
+        return fmt.Errorf("no node to delete before")
+    }</span>
+    
+    <span class="cov1" title="1">if sll.head.Next == node </span><span class="cov0" title="0">{
+        sll.head = sll.head.Next
+        sll.size--
+        return nil
+    }</span>
+    
+    <span class="cov1" title="1">current := sll.head
+    for current != nil &amp;&amp; current.Next != nil &amp;&amp; current.Next.Next != node </span><span class="cov0" title="0">{
+        current = current.Next
+    }</span>
+    
+    <span class="cov1" title="1">if current == nil || current.Next == nil </span><span class="cov0" title="0">{
+        return fmt.Errorf("node not found")
+    }</span>
+    
+    <span class="cov1" title="1">current.Next = current.Next.Next
+    sll.size--
+    return nil</span>
+}
+
+func (sll *SinglyLinkedList) PopFront() (string, error) <span class="cov3" title="2">{
+    if sll.head == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("list is empty")
+    }</span>
+    <span class="cov1" title="1">value := sll.head.Value
+    sll.head = sll.head.Next
+    sll.size--
+    return value, nil</span>
+}
+
+func (sll *SinglyLinkedList) DeleteByKey(value string) bool <span class="cov6" title="4">{
+    if sll.head == nil </span><span class="cov0" title="0">{
+        return false
+    }</span>
+    
+    <span class="cov6" title="4">if sll.head.Value == value </span><span class="cov3" title="2">{
+        sll.head = sll.head.Next
+        sll.size--
+        return true
+    }</span>
+    
+    <span class="cov3" title="2">current := sll.head
+    for current.Next != nil </span><span class="cov4" title="3">{
+        if current.Next.Value == value </span><span class="cov1" title="1">{
+            current.Next = current.Next.Next
+            sll.size--
+            return true
+        }</span>
+        <span class="cov3" title="2">current = current.Next</span>
+    }
+    <span class="cov1" title="1">return false</span>
+}
+
+func (sll *SinglyLinkedList) GetAt(index int) (string, error) <span class="cov4" title="3">{
+    if index &lt; 0 || index &gt;= sll.size </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("index out of range")
+    }</span>
+    
+    <span class="cov3" title="2">current := sll.head
+    for i := 0; i &lt; index; i++ </span><span class="cov0" title="0">{
+        current = current.Next
+    }</span>
+    <span class="cov3" title="2">return current.Value, nil</span>
+}
+
+func (sll *SinglyLinkedList) Size() int <span class="cov10" title="12">{
+    return sll.size
+}</span>
+
+func (sll *SinglyLinkedList) Print() <span class="cov1" title="1">{
+    current := sll.head
+    fmt.Print("Односвязный список: ")
+    for current != nil </span><span class="cov3" title="2">{
+        fmt.Print(current.Value)
+        if current.Next != nil </span><span class="cov1" title="1">{
+            fmt.Print(" -&gt; ")
+        }</span>
+        <span class="cov3" title="2">current = current.Next</span>
+    }
+    <span class="cov1" title="1">fmt.Println(" -&gt; NULL")</span>
+}
+
+func (sll *SinglyLinkedList) Clear() <span class="cov6" title="5">{
+    sll.head = nil
+    sll.size = 0
+}</span>
+
+func (sll *SinglyLinkedList) Serialize() []string <span class="cov1" title="1">{
+    result := make([]string, 0, sll.size)
+    current := sll.head
+    for current != nil </span><span class="cov3" title="2">{
+        result = append(result, current.Value)
+        current = current.Next
+    }</span>
+    <span class="cov1" title="1">return result</span>
+}
+
+func (sll *SinglyLinkedList) Deserialize(data []string) <span class="cov1" title="1">{
+    sll.Clear()
+    for _, item := range data </span><span class="cov3" title="2">{
+        sll.PushBack(item)
+    }</span>
+}
+
+func (sll *SinglyLinkedList) GetHead() *SNode <span class="cov4" title="3">{
+    return sll.head
+}</pre>
+		
+		<pre class="file" id="file3" style="display: none">package structures
+
+import (
+    "fmt"
+    "strings"
+)
+
+type HashItem struct {
+    Key      string
+    Value    string
+    IsDeleted bool
+    IsEmpty   bool
+}
+
+type HashTable struct {
+    items    []HashItem
+    capacity int
+    size     int
+}
+
+func NewHashTable(capacity int) *HashTable <span class="cov4" title="7">{
+    if capacity &lt;= 0 </span><span class="cov2" title="2">{
+        capacity = 10
+    }</span>
+    <span class="cov4" title="7">items := make([]HashItem, capacity)
+    for i := range items </span><span class="cov7" title="38">{
+        items[i] = HashItem{IsEmpty: true}
+    }</span>
+    <span class="cov4" title="7">return &amp;HashTable{
+        items:    items,
+        capacity: capacity,
+        size:     0,
+    }</span>
+}
+
+func (ht *HashTable) Insert(key, value string) bool <span class="cov7" title="47">{
+    if ht.size &gt;= ht.capacity*7/10 </span><span class="cov3" title="6">{
+        ht.rehash()
+    }</span>
+
+    <span class="cov7" title="47">index := ht.hashFunction(key)
+    startIndex := index
+
+    for </span><span class="cov7" title="50">{
+        if ht.items[index].IsEmpty || ht.items[index].IsDeleted </span><span class="cov7" title="46">{
+            ht.items[index] = HashItem{
+                Key:      key,
+                Value:    value,
+                IsDeleted: false,
+                IsEmpty:   false,
+            }
+            ht.size++
+            return true
+        }</span>
+
+        <span class="cov3" title="4">if !ht.items[index].IsDeleted &amp;&amp; ht.items[index].Key == key </span><span class="cov1" title="1">{
+            ht.items[index].Value = value
+            return true
+        }</span>
+
+        <span class="cov2" title="3">index = (index + 1) % ht.capacity
+        if index == startIndex </span><span class="cov0" title="0">{
+            return false
+        }</span>
+    }
+}
+
+func (ht *HashTable) Find(key string) (string, bool) <span class="cov5" title="12">{
+    index := ht.hashFunction(key)
+    startIndex := index
+
+    for </span><span class="cov6" title="22">{
+        if ht.items[index].IsEmpty &amp;&amp; !ht.items[index].IsDeleted </span><span class="cov2" title="3">{
+            return "", false
+        }</span>
+
+        <span class="cov5" title="19">if !ht.items[index].IsEmpty &amp;&amp; !ht.items[index].IsDeleted &amp;&amp;
+            ht.items[index].Key == key </span><span class="cov4" title="9">{
+            return ht.items[index].Value, true
+        }</span>
+
+        <span class="cov4" title="10">index = (index + 1) % ht.capacity
+        if index == startIndex </span><span class="cov0" title="0">{
+            return "", false
+        }</span>
+    }
+}
+
+func (ht *HashTable) Remove(key string) bool <span class="cov2" title="3">{
+    index := ht.hashFunction(key)
+    startIndex := index
+
+    for </span><span class="cov2" title="3">{
+        if ht.items[index].IsEmpty &amp;&amp; !ht.items[index].IsDeleted </span><span class="cov1" title="1">{
+            return false
+        }</span>
+
+        <span class="cov2" title="2">if !ht.items[index].IsEmpty &amp;&amp; !ht.items[index].IsDeleted &amp;&amp;
+            ht.items[index].Key == key </span><span class="cov2" title="2">{
+            ht.items[index].IsDeleted = true
+            ht.size--
+            return true
+        }</span>
+
+        <span class="cov0" title="0">index = (index + 1) % ht.capacity
+        if index == startIndex </span><span class="cov0" title="0">{
+            return false
+        }</span>
+    }
+}
+
+func (ht *HashTable) Clear() <span class="cov2" title="2">{
+    for i := range ht.items </span><span class="cov5" title="12">{
+        ht.items[i] = HashItem{IsEmpty: true}
+    }</span>
+    <span class="cov2" title="2">ht.size = 0</span>
+}
+
+func (ht *HashTable) Empty() bool <span class="cov1" title="1">{
+    return ht.size == 0
+}</span>
+
+func (ht *HashTable) Size() int <span class="cov3" title="5">{
+    return ht.size
+}</span>
+
+func (ht *HashTable) Capacity() int <span class="cov3" title="4">{
+    return ht.capacity
+}</span>
+
+func (ht *HashTable) Print() <span class="cov1" title="1">{
+    fmt.Printf("Хеш-таблица [%d/%d]: ", ht.size, ht.capacity)
+    items := ht.getAllItems()
+    if len(items) == 0 </span><span class="cov0" title="0">{
+        fmt.Println("пуста")
+        return
+    }</span>
+    
+    <span class="cov1" title="1">for i, item := range items </span><span class="cov2" title="2">{
+        fmt.Printf("{%s:%s}", item.Key, item.Value)
+        if i &lt; len(items)-1 </span><span class="cov1" title="1">{
+            fmt.Print(", ")
+        }</span>
+    }
+    <span class="cov1" title="1">fmt.Println()</span>
+}
+
+func (ht *HashTable) Serialize() []string <span class="cov1" title="1">{
+    items := ht.getAllItems()
+    result := make([]string, len(items))
+    for i, item := range items </span><span class="cov2" title="2">{
+        result[i] = item.Key + ":" + item.Value
+    }</span>
+    <span class="cov1" title="1">return result</span>
+}
+
+func (ht *HashTable) Deserialize(data []string) <span class="cov1" title="1">{
+    ht.Clear()
+    for _, item := range data </span><span class="cov2" title="2">{
+        parts := strings.Split(item, ":")
+        if len(parts) == 2 </span><span class="cov2" title="2">{
+            ht.Insert(parts[0], parts[1])
+        }</span>
+    }
+}
+
+func (ht *HashTable) hashFunction(key string) int <span class="cov7" title="62">{
+    hash := 0
+    for _, c := range key </span><span class="cov10" title="233">{
+        hash = (hash*31 + int(c)) % ht.capacity
+    }</span>
+    <span class="cov7" title="62">return hash</span>
+}
+
+func (ht *HashTable) rehash() <span class="cov3" title="6">{
+    oldItems := ht.getAllItems()
+    ht.capacity *= 2
+    ht.items = make([]HashItem, ht.capacity)
+    for i := range ht.items </span><span class="cov7" title="62">{
+        ht.items[i] = HashItem{IsEmpty: true}
+    }</span>
+    <span class="cov3" title="6">ht.size = 0
+
+    for _, item := range oldItems </span><span class="cov5" title="20">{
+        ht.Insert(item.Key, item.Value)
+    }</span>
+}
+
+func (ht *HashTable) getAllItems() []HashItem <span class="cov4" title="8">{
+    result := make([]HashItem, 0, ht.size)
+    for i := 0; i &lt; ht.capacity; i++ </span><span class="cov7" title="46">{
+        if !ht.items[i].IsEmpty &amp;&amp; !ht.items[i].IsDeleted </span><span class="cov6" title="24">{
+            result = append(result, ht.items[i])
+        }</span>
+    }
+    <span class="cov4" title="8">return result</span>
+}</pre>
+		
+		<pre class="file" id="file4" style="display: none">package structures
+
+import "fmt"
+
+type DNode struct {
+    Value string
+    Next  *DNode
+    Prev  *DNode
+}
+
+type DoublyLinkedList struct {
+    head *DNode
+    tail *DNode
+    size int
+}
+
+func NewDoublyLinkedList() *DoublyLinkedList <span class="cov3" title="2">{
+    return &amp;DoublyLinkedList{head: nil, tail: nil, size: 0}
+}</span>
+
+func (dll *DoublyLinkedList) PushFront(value string) <span class="cov3" title="2">{
+    newNode := &amp;DNode{Value: value}
+    if dll.head == nil </span><span class="cov1" title="1">{
+        dll.head = newNode
+        dll.tail = newNode
+    }</span> else<span class="cov1" title="1"> {
+        newNode.Next = dll.head
+        dll.head.Prev = newNode
+        dll.head = newNode
+    }</span>
+    <span class="cov3" title="2">dll.size++</span>
+}
+
+func (dll *DoublyLinkedList) PushBack(value string) <span class="cov8" title="9">{
+    newNode := &amp;DNode{Value: value}
+    if dll.head == nil </span><span class="cov4" title="3">{
+        dll.head = newNode
+        dll.tail = newNode
+    }</span> else<span class="cov7" title="6"> {
+        newNode.Prev = dll.tail
+        dll.tail.Next = newNode
+        dll.tail = newNode
+    }</span>
+    <span class="cov8" title="9">dll.size++</span>
+}
+
+func (dll *DoublyLinkedList) Find(value string) *DNode <span class="cov7" title="7">{
+    current := dll.head
+    for current != nil </span><span class="cov10" title="13">{
+        if current.Value == value </span><span class="cov5" title="4">{
+            return current
+        }</span>
+        <span class="cov8" title="9">current = current.Next</span>
+    }
+    <span class="cov4" title="3">return nil</span>
+}
+
+func (dll *DoublyLinkedList) AddAfter(node *DNode, value string) error <span class="cov3" title="2">{
+    if node == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("node cannot be nil")
+    }</span>
+    
+    <span class="cov1" title="1">newNode := &amp;DNode{Value: value}
+    newNode.Next = node.Next
+    newNode.Prev = node
+    
+    if node.Next != nil </span><span class="cov1" title="1">{
+        node.Next.Prev = newNode
+    }</span>
+    <span class="cov1" title="1">node.Next = newNode
+    
+    if node == dll.tail </span><span class="cov0" title="0">{
+        dll.tail = newNode
+    }</span>
+    
+    <span class="cov1" title="1">dll.size++
+    return nil</span>
+}
+
+func (dll *DoublyLinkedList) AddBefore(node *DNode, value string) error <span class="cov3" title="2">{
+    if node == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("node cannot be nil")
+    }</span>
+    
+    <span class="cov1" title="1">newNode := &amp;DNode{Value: value}
+    newNode.Prev = node.Prev
+    newNode.Next = node
+    
+    if node.Prev != nil </span><span class="cov1" title="1">{
+        node.Prev.Next = newNode
+    }</span>
+    <span class="cov1" title="1">node.Prev = newNode
+    
+    if node == dll.head </span><span class="cov0" title="0">{
+        dll.head = newNode
+    }</span>
+    
+    <span class="cov1" title="1">dll.size++
+    return nil</span>
+}
+
+func (dll *DoublyLinkedList) PopFront() (string, error) <span class="cov3" title="2">{
+    if dll.head == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("list is empty")
+    }</span>
+    
+    <span class="cov1" title="1">value := dll.head.Value
+    if dll.head == dll.tail </span><span class="cov0" title="0">{
+        dll.head = nil
+        dll.tail = nil
+    }</span> else<span class="cov1" title="1"> {
+        dll.head = dll.head.Next
+        dll.head.Prev = nil
+    }</span>
+    
+    <span class="cov1" title="1">dll.size--
+    return value, nil</span>
+}
+
+func (dll *DoublyLinkedList) PopBack() (string, error) <span class="cov3" title="2">{
+    if dll.tail == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("list is empty")
+    }</span>
+    
+    <span class="cov1" title="1">value := dll.tail.Value
+    if dll.head == dll.tail </span><span class="cov0" title="0">{
+        dll.head = nil
+        dll.tail = nil
+    }</span> else<span class="cov1" title="1"> {
+        dll.tail = dll.tail.Prev
+        dll.tail.Next = nil
+    }</span>
+    
+    <span class="cov1" title="1">dll.size--
+    return value, nil</span>
+}
+
+func (dll *DoublyLinkedList) DeleteAfter(node *DNode) error <span class="cov3" title="2">{
+    if node == nil || node.Next == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("no node to delete after")
+    }</span>
+    
+    <span class="cov1" title="1">nodeToDelete := node.Next
+    node.Next = nodeToDelete.Next
+    
+    if nodeToDelete.Next != nil </span><span class="cov1" title="1">{
+        nodeToDelete.Next.Prev = node
+    }</span>
+    
+    <span class="cov1" title="1">if nodeToDelete == dll.tail </span><span class="cov0" title="0">{
+        dll.tail = node
+    }</span>
+    
+    <span class="cov1" title="1">dll.size--
+    return nil</span>
+}
+
+func (dll *DoublyLinkedList) DeleteBefore(node *DNode) error <span class="cov3" title="2">{
+    if node == nil || node.Prev == nil </span><span class="cov1" title="1">{
+        return fmt.Errorf("no node to delete before")
+    }</span>
+    
+    <span class="cov1" title="1">nodeToDelete := node.Prev
+    node.Prev = nodeToDelete.Prev
+    
+    if nodeToDelete.Prev != nil </span><span class="cov1" title="1">{
+        nodeToDelete.Prev.Next = node
+    }</span>
+    
+    <span class="cov1" title="1">if nodeToDelete == dll.head </span><span class="cov0" title="0">{
+        dll.head = node
+    }</span>
+    
+    <span class="cov1" title="1">dll.size--
+    return nil</span>
+}
+
+func (dll *DoublyLinkedList) DeleteByKey(value string) bool <span class="cov3" title="2">{
+    node := dll.Find(value)
+    if node == nil </span><span class="cov1" title="1">{
+        return false
+    }</span>
+    
+    <span class="cov1" title="1">if node.Prev != nil </span><span class="cov0" title="0">{
+        node.Prev.Next = node.Next
+    }</span> else<span class="cov1" title="1"> {
+        dll.head = node.Next
+    }</span>
+    
+    <span class="cov1" title="1">if node.Next != nil </span><span class="cov1" title="1">{
+        node.Next.Prev = node.Prev
+    }</span> else<span class="cov0" title="0"> {
+        dll.tail = node.Prev
+    }</span>
+    
+    <span class="cov1" title="1">dll.size--
+    return true</span>
+}
+
+func (dll *DoublyLinkedList) GetAt(index int) (string, error) <span class="cov4" title="3">{
+    if index &lt; 0 || index &gt;= dll.size </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("index out of range")
+    }</span>
+    
+    <span class="cov3" title="2">current := dll.head
+    for i := 0; i &lt; index; i++ </span><span class="cov0" title="0">{
+        current = current.Next
+    }</span>
+    <span class="cov3" title="2">return current.Value, nil</span>
+}
+
+func (dll *DoublyLinkedList) Size() int <span class="cov9" title="11">{
+    return dll.size
+}</span>
+
+func (dll *DoublyLinkedList) Print() <span class="cov1" title="1">{
+    current := dll.head
+    fmt.Print("Двусвязный список: ")
+    for current != nil </span><span class="cov3" title="2">{
+        fmt.Print(current.Value)
+        if current.Next != nil </span><span class="cov1" title="1">{
+            fmt.Print(" &lt;-&gt; ")
+        }</span>
+        <span class="cov3" title="2">current = current.Next</span>
+    }
+    <span class="cov1" title="1">fmt.Println(" -&gt; NULL")</span>
+}
+
+func (dll *DoublyLinkedList) PrintReverse() <span class="cov1" title="1">{
+    current := dll.tail
+    fmt.Print("Двусвязный список (обратный): ")
+    for current != nil </span><span class="cov3" title="2">{
+        fmt.Print(current.Value)
+        if current.Prev != nil </span><span class="cov1" title="1">{
+            fmt.Print(" &lt;-&gt; ")
+        }</span>
+        <span class="cov3" title="2">current = current.Prev</span>
+    }
+    <span class="cov1" title="1">fmt.Println(" -&gt; NULL")</span>
+}
+
+func (dll *DoublyLinkedList) Clear() <span class="cov5" title="4">{
+    dll.head = nil
+    dll.tail = nil
+    dll.size = 0
+}</span>
+
+func (dll *DoublyLinkedList) Serialize() []string <span class="cov1" title="1">{
+    result := make([]string, 0, dll.size)
+    current := dll.head
+    for current != nil </span><span class="cov3" title="2">{
+        result = append(result, current.Value)
+        current = current.Next
+    }</span>
+    <span class="cov1" title="1">return result</span>
+}
+
+func (dll *DoublyLinkedList) Deserialize(data []string) <span class="cov1" title="1">{
+    dll.Clear()
+    for _, item := range data </span><span class="cov3" title="2">{
+        dll.PushBack(item)
+    }</span>
+}
+
+func (dll *DoublyLinkedList) GetHead() *DNode <span class="cov4" title="3">{
+    return dll.head
+}</span>
+
+func (dll *DoublyLinkedList) GetTail() *DNode <span class="cov4" title="3">{
+    return dll.tail
+}</pre>
+		
+		<pre class="file" id="file5" style="display: none">package structures
+
+import "fmt"
+
+type QNode struct {
+    Value string
+    Next  *QNode
+}
+
+type Queue struct {
+    front *QNode
+    rear  *QNode
+    size  int
+}
+
+func NewQueue() *Queue <span class="cov3" title="2">{
+    return &amp;Queue{front: nil, rear: nil, size: 0}
+}</span>
+
+func (q *Queue) Push(value string) <span class="cov10" title="11">{
+    newNode := &amp;QNode{Value: value}
+    if q.rear == nil </span><span class="cov7" title="5">{
+        q.front = newNode
+        q.rear = newNode
+    }</span> else<span class="cov7" title="6"> {
+        q.rear.Next = newNode
+        q.rear = newNode
+    }</span>
+    <span class="cov10" title="11">q.size++</span>
+}
+
+func (q *Queue) Pop() (string, error) <span class="cov7" title="5">{
+    if q.front == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("queue is empty")
+    }</span>
+    <span class="cov6" title="4">value := q.front.Value
+    q.front = q.front.Next
+    if q.front == nil </span><span class="cov1" title="1">{
+        q.rear = nil
+    }</span>
+    <span class="cov6" title="4">q.size--
+    return value, nil</span>
+}
+
+func (q *Queue) Front() (string, error) <span class="cov3" title="2">{
+    if q.front == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("queue is empty")
+    }</span>
+    <span class="cov1" title="1">return q.front.Value, nil</span>
+}
+
+func (q *Queue) Rear() (string, error) <span class="cov3" title="2">{
+    if q.rear == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("queue is empty")
+    }</span>
+    <span class="cov1" title="1">return q.rear.Value, nil</span>
+}
+
+func (q *Queue) Empty() bool <span class="cov5" title="3">{
+    return q.front == nil
+}</span>
+
+func (q *Queue) Size() int <span class="cov5" title="3">{
+    return q.size
+}</span>
+
+func (q *Queue) Print() <span class="cov1" title="1">{
+    current := q.front
+    fmt.Print("Очередь: ")
+    for current != nil </span><span class="cov3" title="2">{
+        fmt.Print(current.Value)
+        if current.Next != nil </span><span class="cov1" title="1">{
+            fmt.Print(" -&gt; ")
+        }</span>
+        <span class="cov3" title="2">current = current.Next</span>
+    }
+    <span class="cov1" title="1">fmt.Println(" -&gt; NULL")</span>
+}
+
+func (q *Queue) Clear() <span class="cov6" title="4">{
+    q.front = nil
+    q.rear = nil
+    q.size = 0
+}</span>
+
+func (q *Queue) Serialize() []string <span class="cov1" title="1">{
+    result := make([]string, 0, q.size)
+    current := q.front
+    for current != nil </span><span class="cov3" title="2">{
+        result = append(result, current.Value)
+        current = current.Next
+    }</span>
+    <span class="cov1" title="1">return result</span>
+}
+
+func (q *Queue) Deserialize(data []string) <span class="cov1" title="1">{
+    q.Clear()
+    for _, item := range data </span><span class="cov3" title="2">{
+        q.Push(item)
+    }</span>
+}</pre>
+		
+		<pre class="file" id="file6" style="display: none">package structures
+
+import "fmt"
+
+type StackNode struct {
+    Value string
+    Next  *StackNode
+}
+
+type Stack struct {
+    top  *StackNode
+    size int
+}
+
+func NewStack() *Stack <span class="cov3" title="2">{
+    return &amp;Stack{top: nil, size: 0}
+}</span>
+
+func (s *Stack) Push(value string) <span class="cov10" title="11">{
+    newNode := &amp;StackNode{Value: value, Next: s.top}
+    s.top = newNode
+    s.size++
+}</span>
+
+func (s *Stack) Pop() (string, error) <span class="cov6" title="4">{
+    if s.top == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("stack is empty")
+    }</span>
+    <span class="cov5" title="3">value := s.top.Value
+    s.top = s.top.Next
+    s.size--
+    return value, nil</span>
+}
+
+func (s *Stack) Top() (string, error) <span class="cov3" title="2">{
+    if s.top == nil </span><span class="cov1" title="1">{
+        return "", fmt.Errorf("stack is empty")
+    }</span>
+    <span class="cov1" title="1">return s.top.Value, nil</span>
+}
+
+func (s *Stack) Empty() bool <span class="cov5" title="3">{
+    return s.top == nil
+}</span>
+
+func (s *Stack) Size() int <span class="cov6" title="4">{
+    return s.size
+}</span>
+
+func (s *Stack) Print() <span class="cov1" title="1">{
+    current := s.top
+    fmt.Print("Стек: ")
+    for current != nil </span><span class="cov3" title="2">{
+        fmt.Print(current.Value)
+        if current.Next != nil </span><span class="cov1" title="1">{
+            fmt.Print(" -&gt; ")
+        }</span>
+        <span class="cov3" title="2">current = current.Next</span>
+    }
+    <span class="cov1" title="1">fmt.Println(" -&gt; NULL")</span>
+}
+
+func (s *Stack) Clear() <span class="cov6" title="4">{
+    s.top = nil
+    s.size = 0
+}</span>
+
+func (s *Stack) Serialize() []string <span class="cov1" title="1">{
+    result := make([]string, 0, s.size)
+    current := s.top
+    for current != nil </span><span class="cov3" title="2">{
+        result = append(result, current.Value)
+        current = current.Next
+    }</span>
+    <span class="cov1" title="1">return result</span>
+}
+
+func (s *Stack) Deserialize(data []string) <span class="cov1" title="1">{
+    s.Clear()
+    for i := len(data) - 1; i &gt;= 0; i-- </span><span class="cov3" title="2">{
+        s.Push(data[i])
+    }</span>
+}</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
